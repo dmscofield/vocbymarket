@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Segment Analysis - Elmet</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: linear-gradient(135deg, #667eea, #764ba2);
+color: white;
+overflow: hidden;
+}
+
+.presentation {
+height: 100vh;
+display: flex;
+flex-direction: column;
+}
+
+.slide {
+display: none;
+padding: 30px;
+height: 100vh;
+overflow-y: auto;
+animation: slideIn 0.8s ease-in-out;
+}
+
+.slide.active {
+display: block;
+}
+
+@keyframes slideIn {
+from { opacity: 0; transform: translateX(50px); }
+to { opacity: 1; transform: translateX(0); }
+}
+
+.slide h1 {
+font-size: 2.8em;
+margin-bottom: 25px;
+background: linear-gradient(45deg, #ff9a56, #ffad56);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+text-align: center;
+}
+
+.slide h2 {
+font-size: 2em;
+margin-bottom: 20px;
+color: #ffad56;
+border-bottom: 3px solid #ffad56;
+padding-bottom: 8px;
+}
+
+.slide h3 {
+font-size: 1.4em;
+margin: 15px 0 10px 0;
+color: #ff9a56;
+}
+
+.segment-card {
+background: rgba(255, 255, 255, 0.12);
+backdrop-filter: blur(15px);
+border-radius: 20px;
+padding: 25px;
+margin: 15px 0;
+border: 1px solid rgba(255, 255, 255, 0.25);
+transition: all 0.3s ease;
+box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.segment-card:hover {
+transform: translateY(-8px);
+box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+background: rgba(255, 255, 255, 0.18);
+}
+
+.customer-quote {
+background: linear-gradient(135deg, rgba(255, 154, 86, 0.3), rgba(255, 173, 86, 0.3));
+border-left: 5px solid #ff9a56;
+padding: 18px;
+margin: 15px 0;
+border-radius: 10px;
+font-style: italic;
+font-size: 1.05em;
+position: relative;
+}
+
+.customer-quote::before {
+content: '"';
+font-size: 3em;
+position: absolute;
+top: -10px;
+left: 10px;
+color: #ffad56;
+opacity: 0.5;
+}
+
+.pain-point {
+background: rgba(255, 107, 107, 0.35);
+padding: 15px;
+border-radius: 12px;
+margin: 10px 0;
+border-left: 4px solid #ff6b6b;
+}
+
+.value-point {
+background: rgba(72, 187, 120, 0.35);
+padding: 15px;
+border-radius: 12px;
+margin: 10px 0;
+border-left: 4px solid #48bb78;
+}
+
+.opportunity {
+background: linear-gradient(135deg, rgba(255, 193, 7, 0.4), rgba(255, 171, 64, 0.4));
+padding: 18px;
+border-radius: 15px;
+margin: 12px 0;
+border: 2px solid #ffc107;
+text-align: center;
+font-weight: bold;
+font-size: 1.1em;
+}
+
+.stats-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 20px;
+margin: 20px 0;
+}
+
+.stat-box {
+background: rgba(255, 255, 255, 0.15);
+padding: 20px;
+border-radius: 15px;
+text-align: center;
+border: 1px solid rgba(255, 255, 255, 0.3);
+backdrop-filter: blur(10px);
+}
+
+.stat-number {
+font-size: 2.2em;
+font-weight: bold;
+color: #ffad56;
+display: block;
+}
+
+.stat-label {
+font-size: 0.9em;
+margin-top: 5px;
+opacity: 0.9;
+}
+
+.two-column {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 25px;
+align-items: start;
+}
+
+.three-column {
+display: grid;
+grid-template-columns: 1fr 1fr 1fr;
+gap: 20px;
+align-items: start;
+}
+
+.navigation {
+position: fixed;
+bottom: 30px;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+gap: 15px;
+z-index: 1000;
+}
+
+.nav-btn {
+background: rgba(255, 255, 255, 0.2);
+border: 2px solid #ffad56;
+color: white;
+padding: 12px 24px;
+border-radius: 30px;
+cursor: pointer;
+transition: all 0.3s ease;
+font-weight: bold;
+backdrop-filter: blur(10px);
+}
+
+.nav-btn:hover {
+background: #ffad56;
+transform: scale(1.05);
+box-shadow: 0 5px 15px rgba(255, 173, 86, 0.4);
+}
+
+.slide-counter {
+position: fixed;
+top: 30px;
+right: 30px;
+background: rgba(0, 0, 0, 0.6);
+padding: 12px 20px;
+border-radius: 25px;
+font-weight: bold;
+backdrop-filter: blur(10px);
+}
+
+.key-insight {
+background: linear-gradient(135deg, rgba(255, 154, 86, 0.4), rgba(118, 75, 162, 0.4));
+border: 2px solid #ffad56;
+border-radius: 20px;
+padding: 25px;
+margin: 25px 0;
+text-align: center;
+font-size: 1.3em;
+font-weight: bold;
+position: relative;
+overflow: hidden;
+}
+
+.key-insight::before {
+content: '';
+position: absolute;
+top: -50%;
+left: -50%;
+width: 200%;
+height: 200%;
+background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+transform: rotate(45deg);
+animation: shine 3s infinite;
+}
+
+@keyframes shine {
+0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+}
+
+.title-slide {
+text-align: center;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+height: 100vh;
+}
+
+.subtitle {
+font-size: 1.6em;
+margin-top: 20px;
+color: #ffad56;
+}
+
+.date {
+font-size: 1.3em;
+margin-top: 30px;
+opacity: 0.9;
+}
+
+.internal-card {
+background: rgba(118, 75, 162, 0.3);
+border: 2px solid #764ba2;
+border-radius: 15px;
+padding: 20px;
+margin: 15px 0;
+}
+
+.customer-card {
+background: rgba(102, 126, 234, 0.3);
+border: 2px solid #667eea;
+border-radius: 15px;
+padding: 20px;
+margin: 15px 0;
+}
+
+.priority-high {
+border-left: 6px solid #ff6b6b;
+background: rgba(255, 107, 107, 0.2);
+}
+
+.priority-medium {
+border-left: 6px solid #ffc107;
+background: rgba(255, 193, 7, 0.2);
+}
+
+.priority-low {
+border-left: 6px solid #48bb78;
+background: rgba(72, 187, 120, 0.2);
+}
+
+ul {
+padding-left: 20px;
+line-height: 1.8;
+}
+
+li {
+margin: 10px 0;
+}
+
+.emoji {
+font-size: 1.2em;
+margin-right: 8px;
+}
+
+.highlight {
+background: rgba(255, 173, 86, 0.3);
+padding: 2px 8px;
+border-radius: 5px;
+font-weight: bold;
+}
+</style>
+</head>
+<body>
+<div class="presentation">
+<div class="slide-counter">
+<span id="current-slide">1</span> / <span id="total-slides">12</span>
+</div>
+
+<!-- Slide 1: Title -->
+<div class="slide active title-slide">
+<h1>📊 Market Segment Analysis</h1>
+<div class="subtitle">Customer & Internal Voice by Market Segment</div>
+<div class="subtitle">Sorted by Column A - What Each Segment is Really Telling Us</div>
+<div class="date">Neurosymbolic AI Content Analysis • July 2025</div>
+</div>
+
+<!-- Slide 2: Overview -->
+<div class="slide">
+<h1>🎯 Analysis Overview</h1>
+<div class="stats-grid">
+<div class="stat-box">
+<div class="stat-number">16</div>
+<div class="stat-label">Market Segments</div>
+</div>
+<div class="stat-box">
+<div class="stat-number">456</div>
+<div class="stat-label">Content Pieces</div>
+</div>
+<div class="stat-box">
+<div class="stat-number">4</div>
+<div class="stat-label">Customer Markets</div>
+</div>
+<div class="stat-box">
+<div class="stat-number">12</div>
+<div class="stat-label">Internal Perspectives</div>
+</div>
+</div>
+
+<div class="two-column">
+<div class="customer-card">
+<h3>📈 Customer Markets (VOCs)</h3>
+<ul>
+<li><span class="emoji">🏭</span><strong>Industrial:</strong> 112 pieces (highest engagement)</li>
+<li><span class="emoji">🛡️</span><strong>Defense/Aerospace:</strong> 78 pieces</li>
+<li><span class="emoji">🏥</span><strong>Medical:</strong> 58 pieces</li>
+<li><span class="emoji">💻</span><strong>Semiconductor:</strong> 14 pieces</li>
+</ul>
+</div>
+
+<div class="internal-card">
+<h3>🏢 Internal Perspectives (Homework)</h3>
+<ul>
+<li><span class="emoji">👔</span><strong>Internal-Brandon:</strong> Strategic leadership view</li>
+<li><span class="emoji">⚙️</span><strong>Internal-Mike Lee:</strong> Operational excellence focus</li>
+<li><span class="emoji">📋</span><strong>10 Individual Contributors:</strong> Frontline insights</li>
+</ul>
+</div>
+</div>
+
+<div class="key-insight">
+💡 Each segment has unique needs, but speed, consistency, and cost competitiveness are universal challenges
+</div>
+</div>
+
+<!-- Slide 3: Industrial Market Priority #1 -->
+<div class="slide">
+<h1>🏭 Industrial Market - Priority #1</h1>
+<div class="segment-card priority-high">
+<h2>112 Content Pieces - Highest Customer Engagement</h2>
+
+<h3>🎯 Who They Are</h3>
+<div class="customer-quote">
+Major markets are: Optics, Display, Mobile, Pharmaceutical, Auto, Solar. Solar is the newest targeted growth market and they are investing $1.5B in a new facility
+</div>
+
+<div class="two-column">
+<div>
+<h3>🚨 Critical Performance Issues</h3>
+<div class="pain-point">
+<strong>"Little room for forgiveness on late deliveries - they get elevated within organizations"</strong>
+</div>
+<div class="pain-point">
+<strong>"Elmet GFM is 3x more expensive than market"</strong>
+</div>
+<div class="pain-point">
+"Delays or products out of specification lead to lost revenue and pull unnecessarily on company resources"
+</div>
+</div>
+
+<div>
+<h3>💚 What They Value</h3>
+<div class="value-point">
+"Corning appreciates our customer service, responsiveness to requests, and follow-up on action items"
+</div>
+<div class="value-point">
+"Monolith appreciates our frequent communication and on time delivery since January 2025"
+</div>
+</div>
+</div>
+</div>
+
+<div class="opportunity">
+💰 THE $500K OPPORTUNITY 💰<br>
+"Reduce lead time by 50% takes out about 100 mults in excess inventory. At ~$5k per mult that is $500k in reduced inventory"
+</div>
+</div>
+
+<!-- Slide 4: Medical Market -->
+<div class="slide">
+<h1>🏥 Medical Market - Relationship Champions</h1>
+<div class="segment-card priority-high">
+<h2>58 Content Pieces - Personal Relationships Matter Most</h2>
+
+<h3>🎯 Market Structure</h3>
+<div class="customer-quote">
+CT is GE Healthcare's biggest market for imaging, China is the highest growth market. 90%-95% of FWM's sales are into medical industry
+</div>
+
+<div class="two-column">
+<div>
+<h3>❤️ What They Love About Us</h3>
+<div class="value-point">
+<strong>"Mitch! FWM loved Mitch and kept bringing up his eagerness to learn and him being a valuable resource"</strong>
+</div>
+<div class="value-point">
+"They like that we are fully integrated and non-Chinese"
+</div>
+<div class="value-point">
+"Long partnership, we know what they need, stage inventory in Euclid"
+</div>
+</div>
+
+<div>
+<h3>⚠️ Critical Performance Gaps</h3>
+<div class="pain-point">
+<strong>"Other suppliers are quicker to review and supply technical answers"</strong>
+</div>
+<div class="pain-point">
+"Our material quality is an issue - cracks and inconsistent potassium levels"
+</div>
+<div class="pain-point">
+<strong>"Plansee material has incredible surface finish - critical to instrument life"</strong>
+</div>
+</div>
+</div>
+
+<div class="customer-quote">
+Chinese manufacturers have caught up from a technology standpoint and their costs are lower than GE's. Tried to quote moly wire with us but our quote was way too high
+</div>
+</div>
+</div>
+
+<!-- Slide 5: Defense/Aerospace -->
+<div class="slide">
+<h1>🛡️ Defense/Aerospace - Solution Partners</h1>
+<div class="segment-card priority-medium">
+<h2>78 Content Pieces - Partnership & Solutions Focus</h2>
+
+<h3>🎯 Their Reality</h3>
+<div class="customer-quote">
+Government/Military projects; Focus on new space programs and delivery vehicles. We are well-known as a defense and aerospace company
+</div>
+
+<div class="two-column">
+<div>
+<h3>😰 Critical Pain Points</h3>
+<div class="pain-point">
+<strong>"Finding materials and suppliers"</strong>
+</div>
+<div class="pain-point">
+"We did not think finding a company to Roll the materials to our dimensions would be this difficult"
+</div>
+<div class="pain-point">
+"Material supply and services are critical for our Vehicle delivery platform"
+</div>
+</div>
+
+<div>
+<h3>💚 Why They Choose Us</h3>
+<div class="value-point">
+<strong>"Our willingness to explore the Toll rolling for their materials"</strong>
+</div>
+<div class="value-point">
+"Being open to providing solutions and becoming a long-term trusted partner"
+</div>
+<div class="value-point">
+"Our response and support on all RFQs, projects and R&D collaboration"
+</div>
+</div>
+</div>
+
+<h3>🎯 What They Need from Us</h3>
+<div class="three-column">
+<div class="opportunity">DFARS compliant material suppliers</div>
+<div class="opportunity">Toll service suppliers</div>
+<div class="opportunity">Ta supplier alternatives</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 6: Semiconductor -->
+<div class="slide">
+<h1>💻 Semiconductor - Under Pressure</h1>
+<div class="segment-card priority-medium">
+<h2>14 Content Pieces - Quality & Cost Challenges</h2>
+
+<h3>🎯 Market Focus</h3>
+<div class="customer-quote">
+Japan, Asia / Furnaces, Semiconductors, Electronic Components. Vacuum furnace equipment, hot zone building, Class 5000 clean room
+</div>
+
+<div class="two-column">
+<div>
+<h3>💚 Our Strengths</h3>
+<div class="value-point">
+"Long-term Partnerships"
+</div>
+<div class="value-point">
+"Speeding Up Delivery Times, Prices, Quality, and Quotation Responses"
+</div>
+</div>
+
+<div>
+<h3>📉 Performance Issues</h3>
+<div class="pain-point">
+<strong>"Recent Quality Instability and Decreased Price Competitiveness"</strong>
+</div>
+<div class="pain-point">
+"Faster response on commercial and technical questions needed"
+</div>
+</div>
+</div>
+
+<div class="opportunity">
+⚠️ COMPETITIVE THREAT: "Plansee and ALMT are 30%+ lower" on pricing
+</div>
+
+<h3>🌍 Market Challenges</h3>
+<ul>
+<li>Market Trends, Exchange Rates, Tariffs</li>
+<li>Lots of Chinese competition</li>
+<li>Fluctuations in Raw Material Prices</li>
+</ul>
+</div>
+</div>
+
+<!-- Slide 7: Internal Brandon -->
+<div class="slide">
+<h1>👔 Internal-Brandon - Strategic Leadership</h1>
+<div class="internal-card">
+<h2>19 Content Pieces - Organizational Strategy Focus</h2>
+
+<h3>✅ Strategic Achievements</h3>
+<div class="value-point">
+"Started the process of creating a cohesive structure and strategy across the business"
+</div>
+<div class="value-point">
+"Enabled clarity for each site's capabilities and focused leadership over strategic market sectors - Centers of Excellence model"
+</div>
+
+<div class="two-column">
+<div>
+<h3>🚨 Critical Organizational Issues</h3>
+<div class="pain-point">
+<strong>"Overall strategy alignment and flow down. Many goals individually but not aligned across business"</strong>
+</div>
+<div class="pain-point">
+"Team not being transparent or direct with each other"
+</div>
+</div>
+
+<div>
+<h3>🐘 Elephants in the Room</h3>
+<div class="pain-point">
+"Lot of noise regarding going public and great deal of concern"
+</div>
+<div class="pain-point">
+"Corporate structure creating gaps and stress in the organization"
+</div>
+</div>
+</div>
+
+<h3>💭 Dangerous Myths Brandon Identifies</h3>
+<div class="customer-quote">
+'Our business is more complex than others' - I don't subscribe to this thinking. Our industry is incredibly small
+</div>
+<div class="customer-quote">
+'In the past we were much more successful' - This myth has hurt us more times than it should have
+</div>
+</div>
+</div>
+
+<!-- Slide 8: Internal Mike Lee -->
+<div class="slide">
+<h1>⚙️ Internal-Mike Lee - Operational Excellence</h1>
+<div class="internal-card">
+<h2>19 Content Pieces - Operations & Performance Focus</h2>
+
+<h3>✅ Operational Wins</h3>
+<div class="value-point">
+"Union contract negotiated without strike with demonstrated support by union members"
+</div>
+<div class="value-point">
+"Acceptance of leadership changes (CEO/CFO) - Organization supported the changes"
+</div>
+
+<div class="two-column">
+<div>
+<h3>🚨 Critical Performance Gaps</h3>
+<div class="pain-point">
+<strong>"On time delivery at two sites is low and not improving - Likely losing business"</strong>
+</div>
+<div class="pain-point">
+"Launch of SLAP has not gone as planned - Important growth opportunity"
+</div>
+</div>
+
+<div>
+<h3>🔧 Cultural Challenges</h3>
+<div class="pain-point">
+<strong>"Culture lacks sense of urgency"</strong>
+</div>
+<div class="pain-point">
+"Capex levels not adequate to get costs down to be competitive"
+</div>
+</div>
+</div>
+
+<h3>🤖 Technology Solutions Mike Lee Proposes</h3>
+<div class="three-column">
+<div class="opportunity">
+<strong>AI for OTD Management</strong><br>
+"Purchase and train a BOT for dynamic planning"
+</div>
+<div class="opportunity">
+<strong>AI for Pricing</strong><br>
+"BOT for dynamic pricing with planning"
+</div>
+<div class="opportunity">
+<strong>Big Data & Controls</strong><br>
+"Add automation to equipment QUICKLY"
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 9: Individual Contributors -->
+<div class="slide">
+<h1>📋 Individual Contributors - Frontline Reality</h1>
+<div class="internal-card">
+<h2>170+ Content Pieces from 10 Contributors</h2>
+
+<div class="two-column">
+<div>
+<h3>✅ Common Bright Spots</h3>
+<div class="value-point">
+<strong>"Centers of Excellence"</strong> - Allowed each site to do what they do best
+</div>
+<div class="value-point">
+<strong>"ERP Implementation"</strong> - Single platform operation
+</div>
+<div class="value-point">
+<strong>"Government Contracts"</strong> - Landing $5-8M annual DoD contracts
+</div>
+<div class="value-point">
+<strong>"Lockheed NGI Win"</strong> - Massive initial orders secured
+</div>
+</div>
+
+<div>
+<h3>🚨 Universal Dull Spots</h3>
+<div class="pain-point">
+<strong>"On Time Delivery"</strong> - Customer expectations still not met
+</div>
+<div class="pain-point">
+<strong>"Lost Major Customers"</strong> - "Losing Intuitive Surgical after years"
+</div>
+<div class="pain-point">
+<strong>"Communication Gaps"</strong> - Lacking across locations
+</div>
+<div class="pain-point">
+<strong>"Staffing Challenges"</strong> - Consistent across all sites
+</div>
+</div>
+</div>
+
+<h3>💭 Pervasive Myths Everyone Questions</h3>
+<div class="customer-quote">
+"We can't grow because we are expensive" • "Only US supplier" • "Superior quality" • "We win because of quality service when we quote without a call and ship late"
+</div>
+
+<h3>🐘 Elephants Everyone Sees</h3>
+<div class="customer-quote">
+"Honest feedback on performance - Fear of conflict" • "Communication lacking between factories" • "Really old equipment - easy to blame equipment" • "Total disregard for on time delivery"
+</div>
+</div>
+</div>
+
+<!-- Slide 10: Universal Themes -->
+<div class="slide">
+<h1>🌐 Universal Themes Across All Segments</h1>
+
+<div class="two-column">
+<div>
+<h3>🚨 Universal Pain Points</h3>
+<div class="pain-point priority-high">
+<strong>SPEED</strong><br>
+Every segment needs faster response (delivery, technical, commercial)
+</div>
+<div class="pain-point priority-high">
+<strong>CONSISTENCY</strong><br>
+Quality and performance reliability critical across all markets
+</div>
+<div class="pain-point priority-high">
+<strong>COST COMPETITIVENESS</strong><br>
+Chinese pricing pressure affecting all customer segments
+</div>
+</div>
+
+<div>
+<h3>💚 Universal Value Drivers</h3>
+<div class="value-point">
+<strong>PARTNERSHIP APPROACH</strong><br>
+Customers value collaboration and problem-solving
+</div>
+<div class="value-point">
+<strong>DOMESTIC MANUFACTURING</strong><br>
+Non-Chinese supply chain highly valued
+</div>
+<div class="value-point">
+<strong>PERSONAL RELATIONSHIPS</strong><br>
+Individual connections drive loyalty
+</div>
+</div>
+</div>
+
+<div class="key-insight">
+🎯 KEY INSIGHT: While each segment has unique needs, the fundamental challenges of speed, consistency, and cost competitiveness are universal across ALL customer relationships
+</div>
+
+<h3>🔧 Technology Consensus Across Internal Teams</h3>
+<div class="three-column">
+<div class="opportunity">AI & Automation</div>
+<div class="opportunity">Factory Digitization</div>
+<div class="opportunity">Process Control</div>
+</div>
+</div>
+
+<!-- Slide 11: Priority Matrix -->
+<div class="slide">
+<h1>🎯 Action Priority Matrix</h1>
+
+<div class="segment-card">
+<h2>Customer Priorities by Urgency & Impact</h2>
+
+<div class="priority-high">
+<h3>🔥 IMMEDIATE ACTION REQUIRED</h3>
+<div class="two-column">
+<div>
+<strong>Industrial Market:</strong>
+<ul>
+<li>Lead time reduction (50% = $500K customer savings)</li>
+<li>OTD reliability improvement</li>
+<li>Cost competitiveness (currently 3x market)</li>
+</ul>
+</div>
+<div>
+<strong>Medical Market:</strong>
+<ul>
+<li>Technical responsiveness (match competitor speed)</li>
+<li>Surface finish quality improvement</li>
+<li>Material consistency (eliminate defects)</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="priority-medium">
+<h3>⚡ HIGH PRIORITY</h3>
+<div class="two-column">
+<div>
+<strong>Defense/Aerospace:</strong>
+<ul>
+<li>DFARS compliance solutions</li>
+<li>Toll services expansion</li>
+<li>Ta supplier alternatives</li>
+</ul>
+</div>
+<div>
+<strong>Semiconductor:</strong>
+<ul>
+<li>Price competitiveness (30%+ gap)</li>
+<li>Quality stability</li>
+<li>Technical response speed</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="priority-low">
+<h3>📈 STRATEGIC INITIATIVES</h3>
+<div class="two-column">
+<div>
+<strong>Internal Alignment:</strong>
+<ul>
+<li>Strategy communication & flow-down</li>
+<li>Cross-site collaboration improvement</li>
+<li>Performance feedback culture</li>
+</ul>
+</div>
+<div>
+<strong>Technology Investment:</strong>
+<ul>
+<li>AI implementation (OTD, pricing)</li>
+<li>Factory digitization strategy</li>
+<li>Process automation</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 12: Strategic Recommendations -->
+<div class="slide">
+<h1>🚀 Strategic Recommendations</h1>
+
+<div class="two-column">
+<div>
+<h3>🎯 IMMEDIATE WINS (90 Days)</h3>
+<div class="opportunity">
+<strong>$500K Industrial Opportunity</strong><br>
+Partner with customers on 50% lead time reduction
+</div>
+<div class="opportunity">
+<strong>Technical Response Team</strong><br>
+Match Plansee/WireTech real-time support model
+</div>
+<div class="opportunity">
+<strong>Quality Consistency Blitz</strong><br>
+Eliminate cracks, potassium variance in medical products
+</div>
+</div>
+
+<div>
+<h3>🔧 STRATEGIC INVESTMENTS (6-12 Months)</h3>
+<div class="opportunity">
+<strong>Surface Finish Excellence</strong><br>
+Match Plansee quality - "critical to instrument life"
+</div>
+<div class="opportunity">
+<strong>AI-Powered Operations</strong><br>
+Dynamic planning & pricing BOTs (Mike Lee's vision)
+</div>
+<div class="opportunity">
+<strong>Cost Competitiveness Initiative</strong><br>
+Close 3x price gap while maintaining US manufacturing
+</div>
+</div>
+</div>
+
+<div class="key-insight">
+💡 SUCCESS FORMULA: Leverage relationship strength + domestic manufacturing advantage while aggressively closing operational gaps in speed, consistency, and cost
+</div>
+
+<h3>🎪 The Balancing Act</h3>
+<div class="customer-quote">
+Customers love our partnership approach and domestic manufacturing, but we're losing ground on the three fundamentals that drive business decisions: pricing, speed, and consistency
+</div>
+
+<div class="three-column">
+<div class="value-point">
+<strong>MAINTAIN</strong><br>
+Partnership approach<br>
+Domestic manufacturing<br>
+Personal relationships
+</div>
+<div class="pain-point">
+<strong>FIX FAST</strong><br>
+Lead times & OTD<br>
+Technical responsiveness<br>
+Quality consistency
+</div>
+<div class="opportunity">
+<strong>STRATEGIC SOLVE</strong><br>
+Cost competitiveness<br>
+Process automation<br>
+Cultural urgency
+</div>
+</div>
+</div>
+
+<div class="navigation">
+<button class="nav-btn" onclick="previousSlide()">← Previous</button>
+<button class="nav-btn" onclick="nextSlide()">Next →</button>
+</div>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+
+document.getElementById('total-slides').textContent = totalSlides;
+
+function showSlide(n) {
+slides[currentSlide].classList.remove('active');
+currentSlide = (n + totalSlides) % totalSlides;
+slides[currentSlide].classList.add('active');
+document.getElementById('current-slide').textContent = currentSlide + 1;
+}
+
+function nextSlide() {
+showSlide(currentSlide + 1);
+}
+
+function previousSlide() {
+showSlide(currentSlide - 1);
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+if (e.key === 'ArrowRight' || e.key === ' ') {
+nextSlide();
+} else if (e.key === 'ArrowLeft') {
+previousSlide();
+}
+});
+
+// Optional: Auto-advance (uncomment to enable)
+// setInterval(nextSlide, 15000); // Advance every 15 seconds
+</script>
+</body>
+</html>
